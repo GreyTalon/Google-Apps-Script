@@ -14,7 +14,7 @@
 
 // Глобальные переменные
 var contactsCal;
-var defaultCal;
+//var defaultCal;
 var now;
 var fromDate;
 var toDate;
@@ -25,17 +25,17 @@ var events;
     contactsCal = CalendarApp.getCalendarById('addressbook#contacts@group.v.calendar.google.com');
 
     // Создаем события в календаре по умолчанию
-    defaultCal = CalendarApp.getDefaultCalendar();
+//    defaultCal = CalendarApp.getDefaultCalendar();
 
     // Или создаем события в любом другом календаре
-    // var defaultCal = CalendarApp.getCalendarById('regrncqXXXXXXp07eihepag74@group.calendar.google.com'); 
+ var defaultCal = CalendarApp.getCalendarById('regrncqXXXXXXp07eihepag74@group.calendar.google.com'); 
 
-    // Устанавливаем время конкретно для своего региона, например для Москвы 'Europe/Moscow'. Вы можете выбрать для себя свой часовой пояс http://joda-time.sourceforge.net/timezones.html
+    // свой часовой пояс http://joda-time.sourceforge.net/timezones.html
     now = new Date();
     fromDate = new Date(now.getTime());
     toDate = new Date(now.getTime() + 31 * (1000 * 60 * 60 * 24)); // + 31 дней от текущей даты
-    Logger.log('С даты: ' + Utilities.formatDate(fromDate, 'Asia/Yekaterinburg', 'MMMM dd, yyyy HH:mm:ss Z'));
-    Logger.log('По дату: ' + Utilities.formatDate(toDate, 'Asia/Yekaterinburg', 'MMMM dd, yyyy HH:mm:ss Z'));
+    Logger.log('С даты: ' + Utilities.formatDate(fromDate, 'Europe/Kiev', 'MMMM dd, yyyy HH:mm:ss Z'));
+    Logger.log('По дату: ' + Utilities.formatDate(toDate, 'Europe/Kiev', 'MMMM dd, yyyy HH:mm:ss Z'));
     events = contactsCal.getEvents(fromDate, toDate);
     Logger.log('Найдено событий: ' + events.length);
 })();
@@ -64,41 +64,13 @@ function birthdayAgeToCalendar() {
         }
 
         // Заголовок уведомления для дней рождения
-        // Если задан номер мобильного телефона
-        try {
-            // Получаем номер телефона контакта для дней рождения. Необходимо чтобы у контакта (именинника) он был записан в формате +7 918 123-45-67 и обязательно стоял ярлык мобильный или мобильное устройство
             var contacts = ContactsApp.getContactsByName(name);
-            var phones = contacts[0].getPhones(ContactsApp.Field.MOBILE_PHONE); // https://developers.google.com/apps-script/reference/contacts/field?hl=en                
-
             var event = defaultCal.createAllDayEvent(name + " – день рождения, " + years + " " + text(years),
-                new Date(bdayMonthName + ' ' + bdayDay + ', ' + new Date().getFullYear()), {
-                    // Устанавливаем локацию для дней рождения (можно отредактировать под себя)
-                    location: "Пермь",
-                    // Устанавливаем описание события для дней рождения (можно отредактировать под себя)
-                    description: "Сегодня " + name + " празднует день рождения - " + years + " " + text(years) + "!!!\n\nС Днём Рождения! 🎂🎁🙂🎈💃🕺\n☎️ " + phones[i].getPhoneNumber() + ""
-                });
-            // Если мобильного телефона нет или указан в неправильном формате
-        } catch (e) {
-            e = e.message.replace(/\s/g, '+').replace(/\'/g, '')
-            console.log(`birthdayAgeToCalendar. Мобильного телефона нет или указан в неправильном формате, пропускаем в ${new Date().toLocaleTimeString()} с ошибкой: "https://www.google.ru/search?ie=UTF-8&q=javascript+${e}".`)
-            var event = defaultCal.createAllDayEvent(name + " – день рождения, " + years + " " + text(years),
-                new Date(bdayMonthName + ' ' + bdayDay + ', ' + new Date().getFullYear()), {
-                    // Устанавливаем локацию для дней рождения (можно отредактировать под себя)
-                    location: "Пермь",
-                    // Устанавливаем описание события для дней рождения (можно отредактировать под себя)
-                    description: "Сегодня " + name + " празднует день рождения - " + years + " " + text(years) + "!!!\n\nС Днём Рождения! 🎂🎁🙂🎈💃🕺"
-                });
+            new Date(bdayMonthName + ' ' + bdayDay + ', ' + new Date().getFullYear()),);
         }
-
-        // Устанавливаем любой цвет для события дней рождения
-        // event.setColor(CalendarApp.EventColor.RED); 
-
-        // Устанавливаем время уведомлений для дней рождения
-        event.addPopupReminder(0 - 24 * 60); // В день события в 00:00
-        event.addPopupReminder(24 * 60 * 1 - 9 * 60); // За день в 09:00
-        // event.addPopupReminder(24 * 60 * 2 - 9 * 60); // За 2 дня в 09:00
     }
-    logToDrive(); //создаем файл лога на Гугл диске 
+ //создаем файл лога на Гугл диске 
+    logToDrive();
 }
 
 // Годовщины или юбилеи
